@@ -1,0 +1,92 @@
+<html>
+  <head>
+    <title>Card Scanner</title>
+    <script src='https://unpkg.com/tesseract.js@v2.1.0/dist/tesseract.min.js'></script>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/camanjs/3.3.0/caman.full.min.js'></script>
+    <style>
+      #videoCam {
+        width: 630px;
+        height: 300px;
+        margin-left: 0px;
+        border: 3px solid #ccc;
+        background: black;
+      }
+
+      #startBtn {
+        margin-left: 280px;
+        width: 120px;
+        height: 45px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      #startBtn:hover {
+        background-color: #647c90;
+        color: red;
+      }
+
+      #cardDetails {
+        height: 150px;
+        width: 200px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Card Scanner</h1>
+    <br />
+    <video id="videoCam"></video>
+    <br />
+    <br />
+    <button id="startBtn" onclick="openCam()">Open Camera</button>
+    <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+    <br>
+    <label>Card Details:</label>
+    <textarea id="cardDetails"></textarea>
+    </div>
+    <script>
+      var video = document.getElementById('videoCam');
+      var canvas = document.querySelector("#canvas");
+      var cardDetails = document.querySelector("#cardDetails");
+      var isProcessing = false;
+      async function capture() {
+        isProcessing = true;
+        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+        let image = canvas.toDataURL('image/jpeg');
+        const {
+          data: {
+            text
+          }
+        } = await Tesseract.recognize(image);
+        console.log(text, ":::::::");
+        cardDetails.textContent = text;
+        isProcessing = false;
+      }
+      async function openCam() {
+        let All_mediaDevices = navigator.mediaDevices
+        if (!All_mediaDevices || !All_mediaDevices.getUserMedia) {
+          console.log("getUserMedia() not supported.");
+          return;
+        }
+        All_mediaDevices.getUserMedia({
+          audio: false,
+          video: true
+        }).then(function(vidStream) {
+          var video = document.getElementById('videoCam');
+          if ("srcObject" in video) {
+            video.srcObject = vidStream;
+          } else {
+            video.src = window.URL.createObjectURL(vidStream);
+          }
+          video.onloadedmetadata = function(e) {
+            video.play();
+          };
+        }).catch(function(e) {
+          console.log(e.name + ": " + e.message);
+        });
+      }
+      setInterval(async () => {
+        if (!isProcessing) await capture();
+      }, 5000)
+    </script>
+  </body>
+</html>
