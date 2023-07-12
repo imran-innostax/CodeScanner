@@ -1,0 +1,22 @@
+{
+  "name": "codescanner",
+  "version": "1.0.0",
+  "description": "",
+  "main": "fizzBuzz.js",
+  "scripts": {
+    "test": "jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imran-innostax/CodeScanner.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/imran-innostax/CodeScanner/issues"
+  },
+  "homepage": "https://github.com/imran-innostax/CodeScanner#readme",
+  "devDependencies": {
+    "jest": "^29.6.1"
+  }
+}
